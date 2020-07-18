@@ -1,19 +1,41 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <app-navbar
+      :user="user"
+      :logout="logout"
+      ></app-navbar>
+    <v-content>
+      <router-view/>
+    </v-content>
+    <v-footer :fixed="fixed" app>
+      <span>&copy; 2018 - Made with 💙 by Vanya</span>
+    </v-footer>
+  </v-app>
 </template>
 
-<style lang="stylus">
-#app
-  font-family Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
-</style>
+<script>
+import { mapActions, mapState } from 'vuex';
+
+import AppNavbar from '@/components/AppNavbar';
+
+export default {
+  name: 'App',
+  components: {
+    AppNavbar,
+  },
+  data() {
+    return {
+      fixed: false,
+    };
+  },
+  computed: {
+    ...mapState('auth', { user: 'payload' }),
+  },
+  methods: {
+    ...mapActions('auth', { authLogout: 'logout' }),
+    logout() {
+      this.authLogout().then(() => this.$router.push('/login'));
+    },
+  },
+};
+</script>
